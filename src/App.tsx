@@ -21,28 +21,49 @@ const App = () => {
   const [score, setScore] = useState(0);
   const [gameOver, setGameOver] = useState(true);
 
-  console.log(fetchQuizQuestions(TOTAL_QUESTIONS, Difficulty.EASY));
+  const startTrivia = async () => {
+    setLoading(true);
+    setGameOver(false);
+    const newQuestions = await fetchQuizQuestions(
+      TOTAL_QUESTIONS,
+      Difficulty.EASY
+    );
+    setQuestions(newQuestions);
+    setScore(0);
+    setUserAnswers([]);
+    setQuestionNumber(0);
+    setLoading(false);
+  };
 
-  const startTrivia = async () => {};
   const checkAnswer = (event: React.MouseEvent<HTMLButtonElement>) => {};
   const nextQuestion = () => {};
   return (
     <div className="App">
       <h1>REACT QUIZZ</h1>
-      <button onClick={startTrivia}>Start</button>
-      <p className="score">Score: </p>
-      <p>Loading Questions...</p>
-      {/* <QuestoinCart
-        questionNr={questionNumber + 1}
-        totalQuestions={TOTAL_QUESTIONS}
-        question={questions[questionNumber].question}
-        answers={questions[questionNumber].answers}
-        userAnswer={userAnswers ? userAnswers[questionNumber] : undefined}
-        callback={checkAnswer}
-      /> */}
-      <button className="next" onClick={nextQuestion}>
-        Next Question
-      </button>
+      {gameOver || userAnswers.length === TOTAL_QUESTIONS ? (
+        <button onClick={startTrivia}>Start</button>
+      ) : null}
+      {!gameOver && <p className="score">Score: </p>}
+
+      {loading && <p>Loading Questions...</p>}
+      {!loading && !gameOver && (
+        <QuestoinCart
+          questionNr={questionNumber + 1}
+          totalQuestions={TOTAL_QUESTIONS}
+          question={questions[questionNumber].question}
+          answers={questions[questionNumber].answers}
+          userAnswer={userAnswers ? userAnswers[questionNumber] : undefined}
+          callback={checkAnswer}
+        />
+      )}
+      {!gameOver &&
+        !loading &&
+        userAnswers.length === questionNumber + 1 &&
+        questionNumber !== TOTAL_QUESTIONS - 1 && (
+          <button className="next" onClick={nextQuestion}>
+            Next Question
+          </button>
+        )}
     </div>
   );
 };
