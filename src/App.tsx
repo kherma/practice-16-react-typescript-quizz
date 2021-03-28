@@ -4,7 +4,7 @@ import QuestoinCart from "./components/QuestionCard";
 import { fetchQuizQuestions } from "./API";
 import { QuestionState, Difficulty } from "./API";
 
-type AnswerObject = {
+export type AnswerObject = {
   question: string;
   answer: string;
   correct: boolean;
@@ -49,7 +49,14 @@ const App = () => {
       setUserAnswers((prev) => [...prev, answerObject]);
     }
   };
-  const nextQuestion = () => {};
+  const nextQuestion = () => {
+    const nextQuestion = questionNumber + 1;
+    if (nextQuestion === TOTAL_QUESTIONS) {
+      setGameOver(true);
+    } else {
+      setQuestionNumber(nextQuestion);
+    }
+  };
   return (
     <div className="App">
       <h1>REACT QUIZZ</h1>
