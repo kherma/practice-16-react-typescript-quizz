@@ -35,7 +35,20 @@ const App = () => {
     setLoading(false);
   };
 
-  const checkAnswer = (event: React.MouseEvent<HTMLButtonElement>) => {};
+  const checkAnswer = (event: React.MouseEvent<HTMLButtonElement>) => {
+    if (!gameOver) {
+      const answer = event.currentTarget.value;
+      const correct = questions[questionNumber].correct_answer === answer;
+      if (correct) setScore((prev) => prev + 1);
+      const answerObject = {
+        question: questions[questionNumber].question,
+        answer,
+        correct,
+        correctAnswer: questions[questionNumber].correct_answer,
+      };
+      setUserAnswers((prev) => [...prev, answerObject]);
+    }
+  };
   const nextQuestion = () => {};
   return (
     <div className="App">
@@ -43,7 +56,7 @@ const App = () => {
       {gameOver || userAnswers.length === TOTAL_QUESTIONS ? (
         <button onClick={startTrivia}>Start</button>
       ) : null}
-      {!gameOver && <p className="score">Score: </p>}
+      {!gameOver && <p className="score">Score: {score} </p>}
 
       {loading && <p>Loading Questions...</p>}
       {!loading && !gameOver && (
